@@ -24,4 +24,6 @@ public class Kyc {
     private String email;
     private String phoneNumber;
     private LocalDate dateOfBirth;
+    private MembershipStatus membershipStatus;
+    private Address address;
 }
