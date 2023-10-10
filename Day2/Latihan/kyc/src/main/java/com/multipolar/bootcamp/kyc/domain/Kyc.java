@@ -5,6 +5,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotEmpty;
+import java.io.Serializable;
 import java.time.LocalDate;
 
 @Data
@@ -13,7 +14,7 @@ import java.time.LocalDate;
 @ToString
 @EqualsAndHashCode //untuk menjamin nilai unik
 @Document//apabila ingin nama collectionnya sama maka tidak perlu dikasih atribut
-public class Kyc {
+public class Kyc implements Serializable {
     @Id
     private String id;
     @NotEmpty(message = "Task cannot be empty")
