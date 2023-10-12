@@ -1,19 +1,22 @@
 package com.multipolar.bootcamp.crud.controller;
 
 import com.multipolar.bootcamp.crud.domain.Todo;
+import com.multipolar.bootcamp.crud.dto.ErrorMessage;
 import com.multipolar.bootcamp.crud.service.TodoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/todos")
-@Validated
 public class TodoController {
 
     private final TodoService todoService;
@@ -23,9 +26,22 @@ public class TodoController {
     }
     //Mengepost atau menambahkan data ke database
     @PostMapping
-    public Todo createTodo(@Valid @RequestBody Todo todo){
-        return todoService.createOrUpdateTodo(todo);
+    public ResponseEntity<?> createTodo(@Valid @RequestBody Todo todo, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            List<ErrorMessage> validationErrors = new ArrayList<>();
+            for (FieldError error : bindingResult.getFieldErrors()) {
+                ErrorMessage errorMessage = new ErrorMessage();
+                errorMessage.setCode("VALIDATION_ERROR");
+                errorMessage.setMessage(error.getDefaultMessage());
+                validationErrors.add(errorMessage);
+            }
+            return ResponseEntity.badRequest().body(validationErrors);
+        }
+
+        Todo createdTodo = todoService.createOrUpdateTodo(todo);
+        return ResponseEntity.ok(createdTodo);
     }
+
     //mengambil data dari database
     @GetMapping
     public List<Todo> getAllTodos(){
