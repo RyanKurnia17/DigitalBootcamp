@@ -100,7 +100,7 @@ public class ApiController {
             List<ErrorMessageDTO> errorResponse = objectMapper.readValue(ex.getResponseBodyAsString(), List.class);
             AccessLog accessLog =  new AccessLog("GET",CUSTOMER_URL, ex.getRawStatusCode(),LocalDateTime.now(),"Failed");
             accessLogService.logAccess(accessLog);
-            return ResponseEntity.notFound().build();;
+            return ResponseEntity.notFound().build();
         }
     }
 
